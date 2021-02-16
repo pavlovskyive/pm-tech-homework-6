@@ -6,7 +6,7 @@
 //
 
 import Alamofire
-import Foundation
+import UIKit
 
 class NetworkService {
     public func requestAccessToken(authCode: String, completion: @escaping (Result<String, Error>) -> Void) {
@@ -15,21 +15,20 @@ class NetworkService {
             .accept("application/json")
         ]
 
-        let parameters: [String: String] =
-            [
-                "client_id": GithubConstants.clientID,
-                "client_secret": GithubConstants.clientSecret,
-                "code": authCode
-            ]
+        let parameters: [String: String] = [
+            "client_id": GithubConstants.clientID,
+            "client_secret": GithubConstants.clientSecret,
+            "code": authCode
+        ]
 
         AF.request(GithubConstants.tokenURL, method: .post, parameters: parameters, headers: headers)
             .validate(contentType: ["application/json"])
             .validate(statusCode: 200..<300)
             .responseJSON { response in
                 switch response.result {
-                case .success(let result):
-                    if let result = result as? [String: Any],
-                       let token = result["access_token"] as? String {
+                case .success(let data):
+                    if let data = data as? [String: Any],
+                       let token = data["access_token"] as? String {
                         completion(.success(token))
                     }
 
@@ -39,6 +38,26 @@ class NetworkService {
                 }
             }
     }
+
+    public func requestImages(token: String, completion: @escaping (Result<[UIImage], Error>) -> Void) {
+
+        let headers: HTTPHeaders = [
+            .authorization(bearerToken: token),
+            .accept("application/json")
+        ]
+
+        AF.request(GithubConstants.repoURL, headers: headers)
+            .validate(statusCode: 200..<300)
+            .validate()
+            .responseDecodable(of: [RepositoryContent].self) { response in
+                guard let contents = response.value else {
+                    return
+                }
+
+                print(contents)
+            }
+    }
+
 }
 
 enum NetworkError: Error {

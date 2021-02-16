@@ -8,7 +8,7 @@
 import UIKit
 import WebKit
 
-class ViewController: UIViewController {
+class LoginViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,7 +42,7 @@ class ViewController: UIViewController {
 
 }
 
-extension ViewController: LoginDelegate {
+extension LoginViewController: LoginDelegate {
 
     func handleLoggedIn(accessToken: String) {
 
@@ -58,8 +58,11 @@ extension ViewController: LoginDelegate {
           print("An error occurred setting the password.")
         }
 
-        print("User Successfully Logged In")
-        print(getStoredToken())
+        guard let imagesVC = storyboard?.instantiateViewController(identifier: "ImagesViewController") else {
+            return
+        }
+
+        navigationController?.pushViewController(imagesVC, animated: true)
 
     }
 }
