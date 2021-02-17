@@ -8,7 +8,7 @@
 import Alamofire
 import UIKit
 
-class NetworkService {
+class AuthService {
     public func requestAccessToken(authCode: String, completion: @escaping (Result<String, Error>) -> Void) {
 
         let headers: HTTPHeaders = [
@@ -38,28 +38,4 @@ class NetworkService {
                 }
             }
     }
-
-    public func requestImages(token: String, completion: @escaping (Result<[UIImage], Error>) -> Void) {
-
-        let headers: HTTPHeaders = [
-            .authorization(bearerToken: token),
-            .accept("application/json")
-        ]
-
-        AF.request(GithubConstants.repoURL, headers: headers)
-            .validate(statusCode: 200..<300)
-            .validate()
-            .responseDecodable(of: [RepositoryContent].self) { response in
-                guard let contents = response.value else {
-                    return
-                }
-
-                print(contents)
-            }
-    }
-
-}
-
-enum NetworkError: Error {
-    case badResult
 }

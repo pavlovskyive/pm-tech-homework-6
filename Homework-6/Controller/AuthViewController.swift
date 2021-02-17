@@ -92,7 +92,7 @@ extension AuthViewController: WKNavigationDelegate {
               let authCode = urlComponents.queryItems?.first(where: { $0.name == "code" })?.value
         else { return }
 
-        NetworkService().requestAccessToken(authCode: authCode) { [weak self] result in
+        AuthService().requestAccessToken(authCode: authCode) { [weak self] result in
             switch result {
             case .success(let token):
                 self?.dismiss(animated: true) {

@@ -12,7 +12,7 @@ class ImagesViewController: UIViewController {
         let token = getStoredToken()
 
         print(token)
-        NetworkService().requestImages(token: token) { result in
+        ApiService().fetchImages(token: token) { result in
             print(result)
         }
     }
