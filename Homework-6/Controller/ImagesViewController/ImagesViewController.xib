@@ -11,6 +11,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ImagesViewController" customModule="Homework_6" customModuleProvider="target">
             <connections>
                 <outlet property="collectionView" destination="Svg-qb-rZ7" id="ro2-pZ-Epi"/>
+                <outlet property="layout" destination="3rM-Db-4ij" id="J2Z-op-fAx"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -20,7 +21,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="Svg-qb-rZ7">
-                    <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="3rM-Db-4ij">
                         <size key="itemSize" width="128" height="128"/>
@@ -34,8 +35,8 @@
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Svg-qb-rZ7" secondAttribute="trailing" id="AS3-P0-lLz"/>
-                <constraint firstItem="Svg-qb-rZ7" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="MBI-F5-5QO"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="Svg-qb-rZ7" secondAttribute="bottom" id="MgO-Cg-ezJ"/>
+                <constraint firstItem="Svg-qb-rZ7" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="MBI-F5-5QO"/>
+                <constraint firstAttribute="bottom" secondItem="Svg-qb-rZ7" secondAttribute="bottom" id="MgO-Cg-ezJ"/>
                 <constraint firstItem="Svg-qb-rZ7" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="cl6-Z5-uXt"/>
             </constraints>
             <point key="canvasLocation" x="113" y="105"/>

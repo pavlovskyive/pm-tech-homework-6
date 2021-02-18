@@ -21,10 +21,20 @@ class ApiService {
         return nil
     }
 
-    public func fetchImages(completion: @escaping (Result<[ImageData], Error>) -> Void) {
+    public func fetchImage(with imageInfo: ImageInfo, completion: @escaping (Result<ImageData, NetworkError>) -> Void) {
+//
+//                guard let token = token else {
+//                    completion(.failure(NetworkError.noToken))
+//                    return
+//                }
+//
+//                let headers: HTTPHeaders = [
+//                    .authorization(bearerToken: token),
+//                    .accept("application/json")
+//                ]
 
         guard let token = token else {
-            completion(.failure(NetworkError.noToken))
+            completion(.failure(.noToken))
             return
         }
 
@@ -33,52 +43,22 @@ class ApiService {
             .accept("application/json")
         ]
 
-        getImagesInfo { result in
-            switch result {
-            case .success(let imageInfos):
-                print(imageInfos)
-
-                var images = [ImageData]()
-
-                let group = DispatchGroup()
-
-                for imageInfo in imageInfos {
-
-                    guard let downloadURL = imageInfo.downloadURL else {
+        AF.request(imageInfo.downloadURL, headers: headers)
+            .response { response in
+                switch response.result {
+                case .success(let data):
+                    guard let data = data else {
+                        completion(.failure(.badResult))
                         return
                     }
-
-                    group.enter()
-
-                    AF.request(downloadURL, headers: headers)
-                        .response { response in
-                            switch response.result {
-                            case .success(let data):
-                                guard let data = data else {
-                                    group.leave()
-                                    return
-                                }
-                                images.append(ImageData(name: imageInfo.name, data: data))
-
-                            case .failure(let error):
-                                print(error)
-                            }
-                            group.leave()
-                        }
-
+                    completion(.success(ImageData(name: imageInfo.name, data: data)))
+                case .failure(let error):
+                    completion(.failure(.networkError(error)))
                 }
-
-                group.notify(queue: DispatchQueue.global()) {
-                    completion(.success(images))
-                }
-
-            case .failure(let error):
-                completion(.failure(error))
             }
-        }
     }
 
-    private func getImagesInfo(completion: @escaping (Result<[ImageInfo], Error>) -> Void) {
+    public func getImagesInfo(completion: @escaping (Result<[ImageInfo], Error>) -> Void) {
 
         guard let token = token else {
             completion(.failure(NetworkError.noToken))
@@ -117,7 +97,12 @@ class ApiService {
                     }
 
                     return false
-                }.map { ImageInfo(name: $0.name, downloadURL: $0.downloadURL) }
+                }.compactMap { content -> ImageInfo? in
+                    guard let downloadURL = content.downloadURL else {
+                        return nil
+                    }
+                    return ImageInfo(name: content.name, downloadURL: downloadURL)
+                }
 
                 completion(.success(imageData))
                 return

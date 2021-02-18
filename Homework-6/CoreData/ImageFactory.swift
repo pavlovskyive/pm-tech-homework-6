@@ -14,14 +14,17 @@ class ImageFactory {
 }
 
 enum FactoryError: Error {
-    
+
     case objectAllocation
     case contextSaving
     case contextSync
 }
 
 extension ImageFactory {
-    public static func makeImage(with imageData: ImageData, completion: ((Result<CoreImage, FactoryError>) -> Void)? = nil) {
+    public static func makeImage(
+        with imageData: ImageData,
+        completion: ((Result<CoreImage, FactoryError>) -> Void)? = nil) {
+
         let context = container.newBackgroundContext()
         context.perform {
             guard let image = NSEntityDescription
@@ -31,10 +34,10 @@ extension ImageFactory {
                 }
                 return
             }
-            
+
             image.data = imageData.data
             image.name = imageData.name
-            
+
             do {
                 try context.save()
             } catch {
@@ -43,7 +46,7 @@ extension ImageFactory {
                 }
                 return
             }
-            
+
             viewContext.perform {
                 guard let result = try? viewContext.existingObject(with: image.objectID) as? CoreImage else {
                     completion?(.failure(.contextSync))

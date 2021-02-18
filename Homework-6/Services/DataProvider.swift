@@ -22,79 +22,90 @@ class DataProvider {
     }
 
     public func fetchImages(completion: @escaping (Error?) -> Void) {
-        apiService.fetchImages { result in
+        //        apiService.fetchImages { result in
+        //            switch result {
+        //            case .success(let images):
+        //                let taskContext = self.persistentContainer.newBackgroundContext()
+        //                taskContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
+        //                taskContext.undoManager = nil
+        //
+        //                completion(nil)
+        //
+        //            case .failure(let error):
+        //                completion(error)
+        //            }
+        //        }
+
+        apiService.getImagesInfo { result in
             switch result {
-            case .success(let images):
-                let taskContext = self.persistentContainer.newBackgroundContext()
-                taskContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-                taskContext.undoManager = nil
-
-                _ = self.syncImages(images: images, taskContext: taskContext)
-
-                completion(nil)
-
+            case .success(let imagesInfos):
+                print(imagesInfos)
+                self.removeDifferences(imagesInfos: imagesInfos)
+                self.fetchImagesFromApi(imagesInfos: imagesInfos)
             case .failure(let error):
-                completion(error)
+                print(error)
             }
         }
     }
 
-    private func syncImages(images: [ImageData], taskContext: NSManagedObjectContext) -> Bool {
+    private func fetchImagesFromApi(imagesInfos: [ImageInfo]) {
 
-        var isSuccessful = false
+        let taskContext = persistentContainer.newBackgroundContext()
+
+        var remainingImagesInfos = [ImageInfo]()
 
         taskContext.performAndWait {
-            let matchingImagesRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CoreImage")
-            let imageNames = images.map { $0.name }
-            matchingImagesRequest.predicate = NSPredicate(format: "name in %@", argumentArray: [imageNames])
-
-            let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: matchingImagesRequest)
-            batchDeleteRequest.resultType = .resultTypeObjectIDs
+            let currentImagesRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CoreImage")
 
             do {
-//                let batchDeleteResult = try taskContext.execute(batchDeleteRequest) as? NSBatchDeleteResult
-//
-//                if let deletedObjectIDs = batchDeleteResult?.result as? [NSManagedObjectID] {
-//                    NSManagedObjectContext.mergeChanges(
-//                        fromRemoteContextSave: [NSDeletedObjectsKey: deletedObjectIDs],
-//                        into: [self.viewContext])
-//                }
-            } catch {
-                print("Error: \(error)\nCould not batch delete existing records.")
-                return
-
-            }
-
-            for image in images {
-
-                guard let coreImage = NSEntityDescription
-                        .insertNewObject(forEntityName: "CoreImage", into: taskContext) as? CoreImage else {
-                    print("Error: Failed to create a new CoreImage object!")
+                guard let currentImages = try taskContext.fetch(currentImagesRequest) as? [CoreImage] else {
                     return
                 }
 
-                do {
-                    try coreImage.update(with: image)
-                } catch {
-                    print("Error: \(error)\nThe Image object will be deleted.")
-                    taskContext.delete(coreImage)
-                }
+                let currentNames = currentImages.compactMap { $0.name }
+                remainingImagesInfos = imagesInfos.filter { !currentNames.contains($0.name) }
+
+            } catch {
+                print("Error: \(error)\nCould not read existing records.")
             }
-
-            if taskContext.hasChanges {
-
-                do {
-                    try taskContext.save()
-                } catch {
-                    print("Error: \(error)\nCould not save Core Data context.")
-                }
-
-                taskContext.reset() // Reset the context to clean up the cache and low the memory footprint.
-            }
-
-            isSuccessful = true
         }
 
-        return isSuccessful
+        for imageInfo in remainingImagesInfos {
+            apiService.fetchImage(with: imageInfo) { result in
+                switch result {
+                case .success(let imageData):
+                    ImageFactory.makeImage(with: imageData)
+                case .failure(let error):
+                    print(error)
+                }
+            }
+        }
+    }
+
+    private func removeDifferences(imagesInfos: [ImageInfo]) {
+        let taskContext = persistentContainer.newBackgroundContext()
+
+        let names = imagesInfos.map { $0.name }
+
+        taskContext.performAndWait {
+            let differenceImagesRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CoreImage")
+            differenceImagesRequest.predicate = NSPredicate(format: "not (name in %@)", argumentArray: [names])
+
+            let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: differenceImagesRequest)
+            batchDeleteRequest.resultType = .resultTypeObjectIDs
+
+            // Execute the request to de batch delete and merge the changes to viewContext, which triggers the UI update
+            do {
+                let batchDeleteResult = try taskContext.execute(batchDeleteRequest) as? NSBatchDeleteResult
+
+                if let deletedObjectIDs = batchDeleteResult?.result as? [NSManagedObjectID] {
+                    NSManagedObjectContext.mergeChanges(
+                        fromRemoteContextSave: [NSDeletedObjectsKey: deletedObjectIDs],
+                        into: [self.persistentContainer.viewContext])
+                }
+            } catch {
+                print("Error: \(error)\nCould not batch delete existing records.")
+            }
+        }
     }
 }

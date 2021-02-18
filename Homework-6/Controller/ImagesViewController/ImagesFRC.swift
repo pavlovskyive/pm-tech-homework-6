@@ -17,7 +17,7 @@ class ImagesFRC: NSFetchedResultsController<CoreImage> {
         request.sortDescriptors = [sort]
         let result = ImagesFRC(fetchRequest: request,
                                managedObjectContext: context,
-                               sectionNameKeyPath: #keyPath(CoreImage.name),
+                               sectionNameKeyPath: nil,
                                cacheName: nil)
         return result
     }

@@ -11,11 +11,14 @@ import CoreData
 class ImagesViewController: UIViewController {
 
     @IBOutlet weak private var collectionView: UICollectionView!
+    @IBOutlet weak var layout: UICollectionViewFlowLayout!
+
     private let context: NSManagedObjectContext = CoreDataStack.shared.container.viewContext
     private var dataSource: ImagesDataSource?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Images"
         view.backgroundColor = .white
 
         prepareCollectionView()
@@ -44,6 +47,7 @@ private extension ImagesViewController {
             displayng: ImageCell.self)
 
         collectionView.dataSource = dataSource
+        collectionView.delegate = dataSource
         collectionView.reloadData()
     }
 }

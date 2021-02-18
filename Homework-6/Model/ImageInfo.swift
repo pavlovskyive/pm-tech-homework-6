@@ -9,5 +9,5 @@ import Foundation
 
 struct ImageInfo {
     let name: String
-    let downloadURL: String?
+    let downloadURL: String
 }

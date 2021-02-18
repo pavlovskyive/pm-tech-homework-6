@@ -10,4 +10,6 @@ import Foundation
 enum NetworkError: Error {
     case badResult
     case noToken
+    case badRequest
+    case networkError(Error)
 }

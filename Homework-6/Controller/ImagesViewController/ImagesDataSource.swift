@@ -69,13 +69,17 @@ extension ImagesDataSource: UICollectionViewDelegateFlowLayout {
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
 
-        let screenWidth = UIScreen.main.bounds.size.width
-        return CGSize(width: screenWidth - 40, height: 300)
+        if UIDevice.current.orientation.isLandscape {
+            return CGSize(width: collectionView.bounds.width / 2 - 20, height: 300)
+        } else {
+            return CGSize(width: collectionView.bounds.width - 20, height: 300)
+        }
+
     }
 
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        return UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
     }
 }
