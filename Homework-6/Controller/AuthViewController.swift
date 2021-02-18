@@ -48,15 +48,23 @@ private extension AuthViewController {
 
         webView.navigationDelegate = self
 
+        guard let clientID = Bundle.main.infoDictionary?["CLIENT_ID"] as? String,
+              let redirectURL = Bundle.main.infoDictionary?["REDIRECT_URL"] as? String else {
+            return
+        }
+
+        let scope = "read:user,user:email,repo"
+
         let authURLFull =
-            "https://github.com/login/oauth/authorize?client_id=" + GithubConstants.clientID +
-            "&scope=" + GithubConstants.scope +
-            "&redirect_uri=" + GithubConstants.redirectURI +
+            "https://github.com/login/oauth/authorize?client_id=" + clientID +
+            "&scope=" + scope +
+            "&redirect_uri=" + redirectURL +
             "&state=" + uuid
 
         guard let url = URL(string: authURLFull) else {
             return
         }
+
         let urlRequest = URLRequest(url: url)
 
         webView.load(urlRequest)

@@ -48,7 +48,8 @@ class ApiService {
 
     public func getImagesInfo(completion: @escaping (Result<[ImageInfo], Error>) -> Void) {
 
-        guard let token = token else {
+        guard let token = token,
+              let repoURL = Bundle.main.infoDictionary?["REPO_URL"] as? String else {
             completion(.failure(NetworkError.noToken))
             return
         }
@@ -58,7 +59,7 @@ class ApiService {
             .accept("application/json")
         ]
 
-        AF.request(GithubConstants.repoURL, headers: headers)
+        AF.request(repoURL, headers: headers)
             .validate(statusCode: 200..<300)
             .validate()
             .responseDecodable(of: [RepositoryContent].self) { response in

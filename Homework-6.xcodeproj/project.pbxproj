@@ -14,7 +14,6 @@
 		79507ED425DD28C800A3BDD1 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79507ED325DD28C800A3BDD1 /* CoreDataStack.swift */; };
 		79654EAF25DBB91A0076E44E /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 79654EAE25DBB91A0076E44E /* Alamofire */; };
 		79654EB225DBB9280076E44E /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79654EB125DBB9280076E44E /* AuthService.swift */; };
-		79654EB525DBBF5C0076E44E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79654EB425DBBF5C0076E44E /* Constants.swift */; };
 		79654EB825DBC3CC0076E44E /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79654EB725DBC3CC0076E44E /* AuthViewController.swift */; };
 		79654EC525DBCED40076E44E /* KeychainServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79654EC425DBCED40076E44E /* KeychainServices.swift */; };
 		797CBA2625DEC97F00CE3611 /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 797CBA2425DEC96A00CE3611 /* LocalAuthentication.framework */; };
@@ -47,10 +46,10 @@
 		79507ECE25DD28A400A3BDD1 /* CoreImage+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CoreImage+CoreDataProperties.swift"; path = "Homework-6/CoreData/Entities/CoreImage+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		79507ED325DD28C800A3BDD1 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		79654EB125DBB9280076E44E /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
-		79654EB425DBBF5C0076E44E /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		79654EB725DBC3CC0076E44E /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		79654EC425DBCED40076E44E /* KeychainServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainServices.swift; sourceTree = "<group>"; };
 		797CBA2425DEC96A00CE3611 /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
+		797CBA2A25DEF79D00CE3611 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		7993C3B625DD306700F2A93F /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		79A0A8E325DD3DF5006F4833 /* DataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataProvider.swift; sourceTree = "<group>"; };
 		79A4362F25DD9620004C0547 /* UICollectionViewFetchedResultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICollectionViewFetchedResultsController.swift; sourceTree = "<group>"; };
@@ -114,7 +113,6 @@
 			isa = PBXGroup;
 			children = (
 				79A4364725DDA066004C0547 /* Extensions */,
-				79654EB425DBBF5C0076E44E /* Constants.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -226,6 +224,7 @@
 				79B199A225DBB2980064B2C8 /* Assets.xcassets */,
 				79B199A725DBB2980064B2C8 /* Info.plist */,
 				79B1999F25DBB2950064B2C8 /* Images.xcdatamodeld */,
+				797CBA2A25DEF79D00CE3611 /* Config.xcconfig */,
 			);
 			path = "Homework-6";
 			sourceTree = "<group>";
@@ -372,7 +371,6 @@
 				79A0A8E425DD3DF5006F4833 /* DataProvider.swift in Sources */,
 				79507ECF25DD28A400A3BDD1 /* CoreImage+CoreDataClass.swift in Sources */,
 				79D7686925DD2D2B00405E7C /* ApiService.swift in Sources */,
-				79654EB525DBBF5C0076E44E /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -400,6 +398,7 @@
 /* Begin XCBuildConfiguration section */
 		79B199A825DBB2980064B2C8 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 797CBA2A25DEF79D00CE3611 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -461,6 +460,7 @@
 		};
 		79B199A925DBB2980064B2C8 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 797CBA2A25DEF79D00CE3611 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -516,6 +516,7 @@
 		};
 		79B199AB25DBB2980064B2C8 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 797CBA2A25DEF79D00CE3611 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -536,6 +537,7 @@
 		};
 		79B199AC25DBB2980064B2C8 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 797CBA2A25DEF79D00CE3611 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

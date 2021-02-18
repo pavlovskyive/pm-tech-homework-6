@@ -1,0 +1,15 @@
+//
+//  Config.xcconfig
+//  Homework-6
+//
+//  Created by Vsevolod Pavlovskyi on 18.02.2021.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+CLIENT_ID=2f8532b0349263aeddfe
+CLIENT_SECRET=a39d9e5d476f8d82de0e677fc24ae4ad7a1593a8
+TOKEN_URL=https:/$()/github.com/login/oauth/access_token
+REPO_URL=https:/$()/api.github.com/repos/pavlovskyive/pm-tech-homework-6-images/contents/
+REDIRECT_URL=https:/$()/github.com/pavlovskyive
