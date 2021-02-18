@@ -10,23 +10,80 @@ import UIKit
 
 class ApiService {
 
-    public func fetchImages(
-        token: String,
-        completion: @escaping (Result<[UIImage], Error>) -> Void) {
+    var token: String? {
+        let kcw = KeychainWrapper()
+        if let password = try? kcw.getGenericPasswordFor(
+            account: "App",
+            service: "accessToken") {
+            return password
+        }
 
-        getImagesData(token: token) { result in
+        return nil
+    }
+
+    public func fetchImages(completion: @escaping (Result<[ImageData], Error>) -> Void) {
+
+        guard let token = token else {
+            completion(.failure(NetworkError.noToken))
+            return
+        }
+
+        let headers: HTTPHeaders = [
+            .authorization(bearerToken: token),
+            .accept("application/json")
+        ]
+
+        getImagesInfo { result in
             switch result {
-            case .success(let imageData):
-                print(imageData)
+            case .success(let imageInfos):
+                print(imageInfos)
+
+                var images = [ImageData]()
+
+                let group = DispatchGroup()
+
+                for imageInfo in imageInfos {
+
+                    guard let downloadURL = imageInfo.downloadURL else {
+                        return
+                    }
+
+                    group.enter()
+
+                    AF.request(downloadURL, headers: headers)
+                        .response { response in
+                            switch response.result {
+                            case .success(let data):
+                                guard let data = data else {
+                                    group.leave()
+                                    return
+                                }
+                                images.append(ImageData(name: imageInfo.name, data: data))
+
+                            case .failure(let error):
+                                print(error)
+                            }
+                            group.leave()
+                        }
+
+                }
+
+                group.notify(queue: DispatchQueue.global()) {
+                    completion(.success(images))
+                }
+
             case .failure(let error):
                 completion(.failure(error))
             }
         }
     }
 
-    private func getImagesData(
-        token: String,
-        completion: @escaping (Result<[ImageData], Error>) -> Void) {
+    private func getImagesInfo(completion: @escaping (Result<[ImageInfo], Error>) -> Void) {
+
+        guard let token = token else {
+            completion(.failure(NetworkError.noToken))
+            return
+        }
 
         let headers: HTTPHeaders = [
             .authorization(bearerToken: token),
@@ -60,7 +117,7 @@ class ApiService {
                     }
 
                     return false
-                }.map { ImageData(name: $0.name, downloadURL: $0.downloadURL) }
+                }.map { ImageInfo(name: $0.name, downloadURL: $0.downloadURL) }
 
                 completion(.success(imageData))
                 return

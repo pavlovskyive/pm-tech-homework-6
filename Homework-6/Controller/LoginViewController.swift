@@ -58,10 +58,7 @@ extension LoginViewController: LoginDelegate {
           print("An error occurred setting the password.")
         }
 
-        guard let imagesVC = storyboard?.instantiateViewController(identifier: "ImagesViewController") else {
-            return
-        }
-
+        let imagesVC = ImagesViewController(nibName: "ImagesViewController", bundle: nil)
         navigationController?.pushViewController(imagesVC, animated: true)
 
     }

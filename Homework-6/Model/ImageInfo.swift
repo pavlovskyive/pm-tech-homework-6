@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ImageData {
+struct ImageInfo {
     let name: String
-    let data: Data
+    let downloadURL: String?
 }

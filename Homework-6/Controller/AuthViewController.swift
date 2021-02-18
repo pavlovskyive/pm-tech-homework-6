@@ -17,7 +17,16 @@ class AuthViewController: UIViewController {
     weak var delegate: LoginDelegate?
 
     lazy var uuid = UUID().uuidString
-    lazy var webView = WKWebView()
+    lazy var webView: WKWebView = {
+//        let configuration = WKWebViewConfiguration()
+//        configuration.websiteDataStore = .nonPersistent()
+
+//        let webView = WKWebView(frame: view.bounds, configuration: configuration)
+
+        let webView = WKWebView(frame: view.bounds)
+
+        return webView
+    }()
 
     override func viewDidLoad() {
         setup()
@@ -31,8 +40,8 @@ class AuthViewController: UIViewController {
     }
 
     private func setup() {
+
         view.addSubview(webView)
-        webView.frame = view.bounds
 
         webView.navigationDelegate = self
 
