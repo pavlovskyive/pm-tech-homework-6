@@ -9,32 +9,30 @@ import CoreData
 
 class DataProvider {
 
-    private let persistentContainer: NSPersistentContainer
+    private let container: NSPersistentContainer
     private let apiService: ApiService
 
-    var viewContext: NSManagedObjectContext {
-        return persistentContainer.viewContext
+    private var viewContext: NSManagedObjectContext {
+        return container.viewContext
     }
 
     init(persistentContainer: NSPersistentContainer, apiService: ApiService) {
-        self.persistentContainer = persistentContainer
+        self.container = persistentContainer
         self.apiService = apiService
     }
 
-    public func fetchImages(completion: @escaping (Error?) -> Void) {
-        //        apiService.fetchImages { result in
-        //            switch result {
-        //            case .success(let images):
-        //                let taskContext = self.persistentContainer.newBackgroundContext()
-        //                taskContext.mergePolicy = NSMergeByPropertyObjectTrumpMergePolicy
-        //                taskContext.undoManager = nil
-        //
-        //                completion(nil)
-        //
-        //            case .failure(let error):
-        //                completion(error)
-        //            }
-        //        }
+    public func clearStorage() {
+        let taskContext = container.newBackgroundContext()
+
+        taskContext.perform {
+            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CoreImage")
+            let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+
+            _ = try? taskContext.execute(batchDeleteRequest)
+        }
+    }
+
+    public func fetchImages() {
 
         apiService.getImagesInfo { result in
             switch result {
@@ -50,7 +48,7 @@ class DataProvider {
 
     private func fetchImagesFromApi(imagesInfos: [ImageInfo]) {
 
-        let taskContext = persistentContainer.newBackgroundContext()
+        let taskContext = container.newBackgroundContext()
 
         var remainingImagesInfos = [ImageInfo]()
 
@@ -81,9 +79,12 @@ class DataProvider {
             }
         }
     }
+}
 
-    private func removeDifferences(imagesInfos: [ImageInfo]) {
-        let taskContext = persistentContainer.newBackgroundContext()
+private extension DataProvider {
+
+    func removeDifferences(imagesInfos: [ImageInfo]) {
+        let taskContext = container.newBackgroundContext()
 
         let names = imagesInfos.map { $0.name }
 
@@ -94,14 +95,13 @@ class DataProvider {
             let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: differenceImagesRequest)
             batchDeleteRequest.resultType = .resultTypeObjectIDs
 
-            // Execute the request to de batch delete and merge the changes to viewContext, which triggers the UI update
             do {
                 let batchDeleteResult = try taskContext.execute(batchDeleteRequest) as? NSBatchDeleteResult
 
                 if let deletedObjectIDs = batchDeleteResult?.result as? [NSManagedObjectID] {
                     NSManagedObjectContext.mergeChanges(
                         fromRemoteContextSave: [NSDeletedObjectsKey: deletedObjectIDs],
-                        into: [self.persistentContainer.viewContext])
+                        into: [self.container.viewContext])
                 }
             } catch {
                 print("Error: \(error)\nCould not batch delete existing records.")

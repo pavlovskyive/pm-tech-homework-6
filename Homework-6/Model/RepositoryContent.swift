@@ -7,8 +7,6 @@
 
 import Foundation
 
-// MARK: - RepositoryContent
-
 struct RepositoryContent: Codable {
     let type: String
     let name: String

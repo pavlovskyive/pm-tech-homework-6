@@ -15,20 +15,35 @@ class ImagesViewController: UIViewController {
 
     private let context: NSManagedObjectContext = CoreDataStack.shared.container.viewContext
     private var dataSource: ImagesDataSource?
+    private var dataProvider: DataProvider?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Images"
+        navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = .white
 
         prepareCollectionView()
         prepareDataSource()
-
-        DataProvider(persistentContainer: CoreDataStack.shared.container, apiService: ApiService()).fetchImages {_ in}
+        prepareDataProvider()
+        setupNavigationBar()
     }
 }
 
 private extension ImagesViewController {
+
+    func setupNavigationBar() {
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            title: "Log Out", style: .plain, target: self, action: #selector(logOut))
+    }
+
+    @objc func logOut() {
+        let kcw = KeychainWrapper()
+        try? kcw.delete(forKey: "accessToken")
+        dataProvider?.clearStorage()
+
+        navigationController?.dismiss(animated: true)
+    }
 
     func prepareCollectionView() {
 
@@ -49,5 +64,13 @@ private extension ImagesViewController {
         collectionView.dataSource = dataSource
         collectionView.delegate = dataSource
         collectionView.reloadData()
+    }
+
+    func prepareDataProvider() {
+        dataProvider = DataProvider(
+            persistentContainer: CoreDataStack.shared.container,
+            apiService: ApiService())
+
+        dataProvider?.fetchImages()
     }
 }

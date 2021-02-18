@@ -131,6 +131,7 @@
 				79507ED225DD28B600A3BDD1 /* Entities */,
 				79507ED325DD28C800A3BDD1 /* CoreDataStack.swift */,
 				7948377025DE4FDA00F18909 /* ImageFactory.swift */,
+				79A4362F25DD9620004C0547 /* UICollectionViewFetchedResultsController.swift */,
 			);
 			path = CoreData;
 			sourceTree = "<group>";
@@ -150,7 +151,6 @@
 				79A4363825DD9A76004C0547 /* ImagesViewController */,
 				79654EB725DBC3CC0076E44E /* AuthViewController.swift */,
 				79B1999A25DBB2950064B2C8 /* LoginViewController.swift */,
-				79A4362F25DD9620004C0547 /* UICollectionViewFetchedResultsController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";

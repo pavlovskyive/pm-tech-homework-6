@@ -17,12 +17,6 @@ extension CoreImage {
 
     @NSManaged public var data: Data?
     @NSManaged public var name: String?
-
-    func update(with image: ImageData) throws {
-        self.data = image.data
-        self.name = image.name
-    }
-
 }
 
 extension CoreImage: Identifiable {

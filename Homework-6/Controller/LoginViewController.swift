@@ -13,9 +13,34 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        logIn()
     }
 
-    func githubAuthVC() {
+    @IBAction func handleLogInButton(_ sender: UIButton) {
+        authenticate()
+    }
+}
+
+private extension LoginViewController {
+
+    var accessToken: String {
+        let kcw = KeychainWrapper()
+        if let accessToken = try? kcw.get(forKey: "accessToken") {
+            return accessToken
+        }
+
+        return ""
+    }
+
+    func logIn() {
+        guard !accessToken.isEmpty else {
+            return
+        }
+
+        navigateToMain()
+    }
+
+    func authenticate() {
 
         let authVC = AuthViewController()
         authVC.delegate = self
@@ -25,41 +50,28 @@ class LoginViewController: UIViewController {
                      completion: nil)
     }
 
-    @IBAction func handleLogInButton(_ sender: UIButton) {
-        githubAuthVC()
+    func navigateToMain() {
+        let imagesVC = ImagesViewController(nibName: "ImagesViewController", bundle: nil)
+        let imagesNavigationController = UINavigationController(rootViewController: imagesVC)
+
+        imagesNavigationController.modalPresentationStyle = .overFullScreen
+
+        present(imagesNavigationController, animated: true)
     }
-
-    func getStoredToken() -> String {
-      let kcw = KeychainWrapper()
-      if let password = try? kcw.getGenericPasswordFor(
-        account: "App",
-        service: "accessToken") {
-        return password
-      }
-
-      return ""
-    }
-
 }
 
-extension LoginViewController: LoginDelegate {
+extension LoginViewController: AuthDelegate {
 
-    func handleLoggedIn(accessToken: String) {
+    func handleAccessToken(accessToken: String) {
 
         let kcw = KeychainWrapper()
         do {
-          try kcw.storeGenericPasswordFor(
-            account: "App",
-            service: "accessToken",
-            password: accessToken)
+            navigateToMain()
+            try kcw.set(accessToken, forKey: "accessToken")
         } catch let error as KeychainWrapperError {
-          print("Exception setting password: \(error.message ?? "no message")")
+            print("Exception setting password: \(error.message ?? "no message")")
         } catch {
-          print("An error occurred setting the password.")
+            print("An error occurred setting the password.")
         }
-
-        let imagesVC = ImagesViewController(nibName: "ImagesViewController", bundle: nil)
-        navigationController?.pushViewController(imagesVC, animated: true)
-
     }
 }

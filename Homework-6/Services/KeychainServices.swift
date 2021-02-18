@@ -38,45 +38,39 @@ struct KeychainWrapperError: Error {
 }
 
 class KeychainWrapper {
-    func storeGenericPasswordFor(
-        account: String,
-        service: String,
-        password: String
-    ) throws {
-        if password.isEmpty {
-            try deleteGenericPasswordFor(account: account, service: service)
-            return
-        }
-        guard let passwordData = password.data(using: .utf8) else {
+    public func set(_ value: String, forKey service: String) throws {
+
+//        if value.isEmpty {
+//            try deleteKey(account: account, service: service)
+//            return
+//        }
+
+        guard let valueData = value.data(using: .utf8) else {
             print("Error converting value to data.")
             throw KeychainWrapperError(type: .badData)
         }
 
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: account,
             kSecAttrService as String: service,
-            kSecValueData as String: passwordData
+            kSecValueData as String: valueData
         ]
 
         let status = SecItemAdd(query as CFDictionary, nil)
+
         switch status {
         case errSecSuccess:
             break
         case errSecDuplicateItem:
-            try updateGenericPasswordFor(
-                account: account,
-                service: service,
-                password: password)
+            try update(value, forKey: service)
         default:
             throw KeychainWrapperError(status: status, type: .servicesError)
         }
     }
 
-    func getGenericPasswordFor(account: String, service: String) throws -> String {
+    public func get(forKey service: String) throws -> String {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: account,
             kSecAttrService as String: service,
 
             kSecMatchLimit as String: kSecMatchLimitOne,
@@ -104,23 +98,19 @@ class KeychainWrapper {
         return value
     }
 
-    func updateGenericPasswordFor(
-        account: String,
-        service: String,
-        password: String
-    ) throws {
-        guard let passwordData = password.data(using: .utf8) else {
+    public func update(_ value: String, forKey service: String) throws {
+
+        guard let valueData = value.data(using: .utf8) else {
             print("Error converting value to data.")
             return
         }
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: account,
             kSecAttrService as String: service
         ]
 
         let attributes: [String: Any] = [
-            kSecValueData as String: passwordData
+            kSecValueData as String: valueData
         ]
 
         let status = SecItemUpdate(query as CFDictionary, attributes as CFDictionary)
@@ -132,10 +122,9 @@ class KeychainWrapper {
         }
     }
 
-    func deleteGenericPasswordFor(account: String, service: String) throws {
+    public func delete(forKey service: String) throws {
         let query: [String: Any] = [
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: account,
             kSecAttrService as String: service
         ]
 

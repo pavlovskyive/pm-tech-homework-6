@@ -8,22 +8,22 @@
 import UIKit
 import WebKit
 
-protocol LoginDelegate: AnyObject {
-    func handleLoggedIn(accessToken: String)
+protocol AuthDelegate: AnyObject {
+    func handleAccessToken(accessToken: String)
 }
 
 class AuthViewController: UIViewController {
 
-    weak var delegate: LoginDelegate?
+    weak var delegate: AuthDelegate?
 
-    lazy var uuid = UUID().uuidString
-    lazy var webView: WKWebView = {
-//        let configuration = WKWebViewConfiguration()
-//        configuration.websiteDataStore = .nonPersistent()
+    lazy private var uuid = UUID().uuidString
+    lazy private var webView: WKWebView = {
+        let configuration = WKWebViewConfiguration()
+        // We don't want webview to store credentials.
+        // First time user authenticated, he will login by biometrics.
+        configuration.websiteDataStore = .nonPersistent()
 
-//        let webView = WKWebView(frame: view.bounds, configuration: configuration)
-
-        let webView = WKWebView(frame: view.bounds)
+        let webView = WKWebView(frame: view.bounds, configuration: configuration)
 
         return webView
     }()
@@ -38,8 +38,11 @@ class AuthViewController: UIViewController {
         webView.stopLoading()
         webView.navigationDelegate = nil
     }
+}
 
-    private func setup() {
+private extension AuthViewController {
+
+    func setup() {
 
         view.addSubview(webView)
 
@@ -105,7 +108,7 @@ extension AuthViewController: WKNavigationDelegate {
             switch result {
             case .success(let token):
                 self?.dismiss(animated: true) {
-                    self?.delegate?.handleLoggedIn(accessToken: token)
+                    self?.delegate?.handleAccessToken(accessToken: token)
                 }
             case .failure(let error):
                 print(error)

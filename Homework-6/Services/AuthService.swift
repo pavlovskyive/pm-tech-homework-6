@@ -9,6 +9,7 @@ import Alamofire
 import UIKit
 
 class AuthService {
+
     public func requestAccessToken(authCode: String, completion: @escaping (Result<String, Error>) -> Void) {
 
         let headers: HTTPHeaders = [

@@ -10,28 +10,16 @@ import UIKit
 
 class ApiService {
 
-    var token: String? {
+    private var token: String? {
         let kcw = KeychainWrapper()
-        if let password = try? kcw.getGenericPasswordFor(
-            account: "App",
-            service: "accessToken") {
-            return password
+        if let accessToken = try? kcw.get(forKey: "accessToken") {
+            return accessToken
         }
 
         return nil
     }
 
     public func fetchImage(with imageInfo: ImageInfo, completion: @escaping (Result<ImageData, NetworkError>) -> Void) {
-//
-//                guard let token = token else {
-//                    completion(.failure(NetworkError.noToken))
-//                    return
-//                }
-//
-//                let headers: HTTPHeaders = [
-//                    .authorization(bearerToken: token),
-//                    .accept("application/json")
-//                ]
 
         guard let token = token else {
             completion(.failure(.noToken))
