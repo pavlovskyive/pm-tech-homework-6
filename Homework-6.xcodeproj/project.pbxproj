@@ -17,6 +17,7 @@
 		79654EB525DBBF5C0076E44E /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79654EB425DBBF5C0076E44E /* Constants.swift */; };
 		79654EB825DBC3CC0076E44E /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79654EB725DBC3CC0076E44E /* AuthViewController.swift */; };
 		79654EC525DBCED40076E44E /* KeychainServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79654EC425DBCED40076E44E /* KeychainServices.swift */; };
+		797CBA2625DEC97F00CE3611 /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 797CBA2425DEC96A00CE3611 /* LocalAuthentication.framework */; };
 		7993C3B725DD306700F2A93F /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7993C3B625DD306700F2A93F /* NetworkError.swift */; };
 		79A0A8E425DD3DF5006F4833 /* DataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A0A8E325DD3DF5006F4833 /* DataProvider.swift */; };
 		79A4363025DD9620004C0547 /* UICollectionViewFetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A4362F25DD9620004C0547 /* UICollectionViewFetchedResultsController.swift */; };
@@ -49,6 +50,7 @@
 		79654EB425DBBF5C0076E44E /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		79654EB725DBC3CC0076E44E /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		79654EC425DBCED40076E44E /* KeychainServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainServices.swift; sourceTree = "<group>"; };
+		797CBA2425DEC96A00CE3611 /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
 		7993C3B625DD306700F2A93F /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		79A0A8E325DD3DF5006F4833 /* DataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataProvider.swift; sourceTree = "<group>"; };
 		79A4362F25DD9620004C0547 /* UICollectionViewFetchedResultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICollectionViewFetchedResultsController.swift; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				797CBA2625DEC97F00CE3611 /* LocalAuthentication.framework in Frameworks */,
 				79654EAF25DBB91A0076E44E /* Alamofire in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -155,6 +158,14 @@
 			path = Controller;
 			sourceTree = "<group>";
 		};
+		797CBA2325DEC96A00CE3611 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				797CBA2425DEC96A00CE3611 /* LocalAuthentication.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		79A4363825DD9A76004C0547 /* ImagesViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -188,6 +199,7 @@
 			children = (
 				79B1999525DBB2950064B2C8 /* Homework-6 */,
 				79B1999425DBB2950064B2C8 /* Products */,
+				797CBA2325DEC96A00CE3611 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};

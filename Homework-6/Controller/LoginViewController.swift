@@ -7,6 +7,7 @@
 
 import UIKit
 import WebKit
+import LocalAuthentication
 
 class LoginViewController: UIViewController {
 
@@ -32,12 +33,44 @@ private extension LoginViewController {
         return ""
     }
 
+    func loginWithBiometrics() {
+        let context = LAContext()
+        var error: NSError?
+
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            let reason = "Identify yourself"
+
+            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics,
+                                   localizedReason: reason) { [weak self] success, _ in
+                DispatchQueue.main.async {
+                    if success {
+                        self?.navigateToMain()
+                    } else {
+                        let alertController = UIAlertController(
+                            title: "Authentication failed",
+                            message: "You can try again or login with GitHub", preferredStyle: .alert)
+                        alertController.addAction(UIAlertAction(title: "OK", style: .default))
+                        self?.present(alertController, animated: true)
+                    }
+                }
+            }
+        } else {
+            let alertController = UIAlertController(
+                title: "Biometric identification is not available",
+                message: "Your device is not configured for Face ID or Touch ID.", preferredStyle: .actionSheet)
+            alertController.addAction(UIAlertAction(title: "OK", style: .default))
+            present(alertController, animated: true)
+        }
+    }
+
     func logIn() {
         guard !accessToken.isEmpty else {
+            authenticate()
             return
         }
 
-        navigateToMain()
+        loginWithBiometrics()
+//        navigateToMain()
     }
 
     func authenticate() {
