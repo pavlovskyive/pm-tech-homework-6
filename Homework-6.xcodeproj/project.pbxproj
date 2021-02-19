@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -12,11 +12,13 @@
 		79507ECF25DD28A400A3BDD1 /* CoreImage+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79507ECD25DD28A400A3BDD1 /* CoreImage+CoreDataClass.swift */; };
 		79507ED025DD28A400A3BDD1 /* CoreImage+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79507ECE25DD28A400A3BDD1 /* CoreImage+CoreDataProperties.swift */; };
 		79507ED425DD28C800A3BDD1 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79507ED325DD28C800A3BDD1 /* CoreDataStack.swift */; };
-		79654EAF25DBB91A0076E44E /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 79654EAE25DBB91A0076E44E /* Alamofire */; };
 		79654EB225DBB9280076E44E /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79654EB125DBB9280076E44E /* AuthService.swift */; };
 		79654EB825DBC3CC0076E44E /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79654EB725DBC3CC0076E44E /* AuthViewController.swift */; };
 		79654EC525DBCED40076E44E /* KeychainServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79654EC425DBCED40076E44E /* KeychainServices.swift */; };
+		796FB00125DFCB0800056AE3 /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 797CBA2425DEC96A00CE3611 /* LocalAuthentication.framework */; };
 		797CBA2625DEC97F00CE3611 /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 797CBA2425DEC96A00CE3611 /* LocalAuthentication.framework */; };
+		797CBA2F25DF0DB800CE3611 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 797CBA2E25DF0DB800CE3611 /* NetworkService.swift */; };
+		797CBA3225DF186F00CE3611 /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 797CBA3125DF186F00CE3611 /* Data.swift */; };
 		7993C3B725DD306700F2A93F /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7993C3B625DD306700F2A93F /* NetworkError.swift */; };
 		79A0A8E425DD3DF5006F4833 /* DataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A0A8E325DD3DF5006F4833 /* DataProvider.swift */; };
 		79A4363025DD9620004C0547 /* UICollectionViewFetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79A4362F25DD9620004C0547 /* UICollectionViewFetchedResultsController.swift */; };
@@ -50,6 +52,8 @@
 		79654EC425DBCED40076E44E /* KeychainServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainServices.swift; sourceTree = "<group>"; };
 		797CBA2425DEC96A00CE3611 /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
 		797CBA2A25DEF79D00CE3611 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		797CBA2E25DF0DB800CE3611 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
+		797CBA3125DF186F00CE3611 /* Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
 		7993C3B625DD306700F2A93F /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		79A0A8E325DD3DF5006F4833 /* DataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataProvider.swift; sourceTree = "<group>"; };
 		79A4362F25DD9620004C0547 /* UICollectionViewFetchedResultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICollectionViewFetchedResultsController.swift; sourceTree = "<group>"; };
@@ -80,7 +84,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				797CBA2625DEC97F00CE3611 /* LocalAuthentication.framework in Frameworks */,
-				79654EAF25DBB91A0076E44E /* Alamofire in Frameworks */,
+				796FB00125DFCB0800056AE3 /* LocalAuthentication.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,6 +109,7 @@
 				79654EB125DBB9280076E44E /* AuthService.swift */,
 				79D7686825DD2D2B00405E7C /* ApiService.swift */,
 				79A0A8E325DD3DF5006F4833 /* DataProvider.swift */,
+				797CBA2E25DF0DB800CE3611 /* NetworkService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -188,6 +193,7 @@
 			isa = PBXGroup;
 			children = (
 				79A4364825DDA074004C0547 /* UIResponder.swift */,
+				797CBA3125DF186F00CE3611 /* Data.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -248,7 +254,6 @@
 			);
 			name = "Homework-6";
 			packageProductDependencies = (
-				79654EAE25DBB91A0076E44E /* Alamofire */,
 			);
 			productName = "Homework-6";
 			productReference = 79B1999325DBB2950064B2C8 /* Homework-6.app */;
@@ -278,7 +283,6 @@
 			);
 			mainGroup = 79B1998A25DBB2950064B2C8;
 			packageReferences = (
-				79654EAD25DBB91A0076E44E /* XCRemoteSwiftPackageReference "Alamofire" */,
 			);
 			productRefGroup = 79B1999425DBB2950064B2C8 /* Products */;
 			projectDirPath = "";
@@ -354,10 +358,12 @@
 				79654EB225DBB9280076E44E /* AuthService.swift in Sources */,
 				79A4364525DD9DB8004C0547 /* ImagesFRC.swift in Sources */,
 				79654EC525DBCED40076E44E /* KeychainServices.swift in Sources */,
+				797CBA3225DF186F00CE3611 /* Data.swift in Sources */,
 				79A4363525DD9829004C0547 /* ImagesViewController.swift in Sources */,
 				79A4364025DD9B67004C0547 /* ImageCell.swift in Sources */,
 				7913137C25DD483A00E3D60B /* ImageData.swift in Sources */,
 				79F6F57625DC512E005EFDA3 /* RepositoryContent.swift in Sources */,
+				797CBA2F25DF0DB800CE3611 /* NetworkService.swift in Sources */,
 				79507ED025DD28A400A3BDD1 /* CoreImage+CoreDataProperties.swift in Sources */,
 				79B199A125DBB2950064B2C8 /* Images.xcdatamodeld in Sources */,
 				79507ED425DD28C800A3BDD1 /* CoreDataStack.swift in Sources */,
@@ -578,25 +584,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		79654EAD25DBB91A0076E44E /* XCRemoteSwiftPackageReference "Alamofire" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Alamofire/Alamofire";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.4.1;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		79654EAE25DBB91A0076E44E /* Alamofire */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 79654EAD25DBB91A0076E44E /* XCRemoteSwiftPackageReference "Alamofire" */;
-			productName = Alamofire;
-		};
-/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		79B1999F25DBB2950064B2C8 /* Images.xcdatamodeld */ = {

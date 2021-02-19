@@ -40,10 +40,10 @@ struct KeychainWrapperError: Error {
 class KeychainWrapper {
     public func set(_ value: String, forKey service: String) throws {
 
-//        if value.isEmpty {
-//            try deleteKey(account: account, service: service)
-//            return
-//        }
+        if value.isEmpty {
+            try delete(forKey: service)
+            return
+        }
 
         guard let valueData = value.data(using: .utf8) else {
             print("Error converting value to data.")
