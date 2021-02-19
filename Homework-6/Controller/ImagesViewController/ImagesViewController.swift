@@ -17,6 +17,8 @@ class ImagesViewController: UIViewController {
     private var dataSource: ImagesDataSource?
     private var dataProvider: DataProvider?
 
+    lazy private var refreshControl = UIRefreshControl()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Images"
@@ -27,6 +29,9 @@ class ImagesViewController: UIViewController {
         prepareDataSource()
         prepareDataProvider()
         setupNavigationBar()
+        setupRefreshControl()
+
+        reloadData()
     }
 }
 
@@ -35,6 +40,12 @@ private extension ImagesViewController {
     func setupNavigationBar() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(
             title: "Log Out", style: .plain, target: self, action: #selector(logOut))
+    }
+
+    func setupRefreshControl() {
+        refreshControl.addTarget(self, action: #selector(reloadData), for: .valueChanged)
+        refreshControl.backgroundColor = .systemBackground
+        collectionView.addSubview(refreshControl)
     }
 
     @objc func logOut() {
@@ -70,7 +81,11 @@ private extension ImagesViewController {
         dataProvider = DataProvider(
             persistentContainer: CoreDataStack.shared.container,
             apiService: ApiService())
+    }
 
+    @objc func reloadData() {
+        refreshControl.beginRefreshing()
         dataProvider?.fetchImages()
+        refreshControl.endRefreshing()
     }
 }
