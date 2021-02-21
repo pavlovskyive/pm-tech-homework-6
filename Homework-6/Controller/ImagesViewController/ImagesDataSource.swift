@@ -49,37 +49,15 @@ extension ImagesDataSource: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
-        let system = frc.object(at: indexPath)
+        let object = frc.object(at: indexPath)
         guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: cellClass.reuseIdOrClassName,
                 for: indexPath) as? ImageCell else {
             fatalError("Could not cast cell as ImageCell")
         }
 
-        cell.image = system.image
-        cell.text = system.name
+        cell.image = object.image
 
         return cell
-    }
-}
-
-extension ImagesDataSource: UICollectionViewDelegateFlowLayout {
-
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
-
-        if UIDevice.current.orientation.isLandscape {
-            return CGSize(width: collectionView.bounds.width / 2 - 20, height: 300)
-        } else {
-            return CGSize(width: collectionView.bounds.width - 20, height: 300)
-        }
-
-    }
-
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
     }
 }

@@ -70,7 +70,6 @@ private extension LoginViewController {
         }
 
         loginWithBiometrics()
-//        navigateToMain()
     }
 
     func authenticate() {
