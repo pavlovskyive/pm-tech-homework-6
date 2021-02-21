@@ -87,17 +87,17 @@ private extension DataProvider {
                         differences.append(coreImage)
                         return
                     }
-                    
+
                     guard let index = remaining.firstIndex(where: { $0.sha == coreImage.sha }) else {
                         return
                     }
-                    
+
                     remaining.remove(at: index)
                 }
 
                 differences.forEach { taskContext.delete($0) }
                 try? taskContext.save()
-                
+
                 completion(remaining)
             } catch {
                 print("Error: \(error)\nCould not batch delete existing records.")
