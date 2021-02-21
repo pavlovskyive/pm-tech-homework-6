@@ -10,4 +10,5 @@ import Foundation
 struct ImageData {
     let name: String
     let data: Data
+    let sha: String
 }

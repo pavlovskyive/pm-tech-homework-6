@@ -17,6 +17,7 @@ extension CoreImage {
 
     @NSManaged public var data: Data?
     @NSManaged public var name: String?
+    @NSManaged public var sha: String?
 }
 
 extension CoreImage: Identifiable {

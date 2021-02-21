@@ -34,7 +34,7 @@ class ApiService {
         NetworkService.getRequest(urlString: urlString, headers: headers) { result in
             switch result {
             case .success(let data):
-                let imageData = ImageData(name: imageInfo.name, data: data)
+                let imageData = ImageData(name: imageInfo.name, data: data, sha: imageInfo.sha)
                 completion(.success(imageData))
             case .failure(let error):
                 completion(.failure(.networkError(error)))
@@ -76,7 +76,8 @@ class ApiService {
                             "bmp",
                             "ico",
                             "cur",
-                            "xbm"
+                            "xbm",
+                            "png"
                         ]
 
                         let imageData = contents.filter { content in
@@ -91,7 +92,7 @@ class ApiService {
                             guard let downloadURL = content.downloadURL else {
                                 return nil
                             }
-                            return ImageInfo(name: content.name, downloadURL: downloadURL)
+                            return ImageInfo(name: content.name, downloadURL: downloadURL, sha: content.sha)
                         }
 
                         completion(.success(imageData))

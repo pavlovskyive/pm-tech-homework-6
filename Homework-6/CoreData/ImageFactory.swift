@@ -37,6 +37,7 @@ extension ImageFactory {
 
             image.data = imageData.data
             image.name = imageData.name
+            image.sha = imageData.sha
 
             do {
                 try context.save()

@@ -3,8 +3,9 @@
     <entity name="CoreImage" representedClassName="CoreImage" syncable="YES">
         <attribute name="data" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
         <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="sha" optional="YES" attributeType="String"/>
     </entity>
     <elements>
-        <element name="CoreImage" positionX="-63" positionY="-18" width="128" height="59"/>
+        <element name="CoreImage" positionX="-63" positionY="-18" width="128" height="74"/>
     </elements>
 </model>

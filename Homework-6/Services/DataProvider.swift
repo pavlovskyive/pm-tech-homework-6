@@ -37,9 +37,9 @@ class DataProvider {
         apiService.getImagesInfo { result in
             switch result {
             case .success(let imagesInfos):
-                print(imagesInfos)
-                self.removeDifferences(imagesInfos: imagesInfos)
-                self.fetchImagesFromApi(imagesInfos: imagesInfos)
+                self.removeDifferences(imagesInfos: imagesInfos) { remaining in
+                    self.fetchImagesFromApi(imagesInfos: remaining)
+                }
             case .failure(let error):
                 print(error)
             }
@@ -48,27 +48,7 @@ class DataProvider {
 
     private func fetchImagesFromApi(imagesInfos: [ImageInfo]) {
 
-        let taskContext = container.newBackgroundContext()
-
-        var remainingImagesInfos = [ImageInfo]()
-
-        taskContext.performAndWait {
-            let currentImagesRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CoreImage")
-
-            do {
-                guard let currentImages = try taskContext.fetch(currentImagesRequest) as? [CoreImage] else {
-                    return
-                }
-
-                let currentNames = currentImages.compactMap { $0.name }
-                remainingImagesInfos = imagesInfos.filter { !currentNames.contains($0.name) }
-
-            } catch {
-                print("Error: \(error)\nCould not read existing records.")
-            }
-        }
-
-        for imageInfo in remainingImagesInfos {
+        for imageInfo in imagesInfos {
             apiService.fetchImage(with: imageInfo) { result in
                 switch result {
                 case .success(let imageData):
@@ -83,26 +63,42 @@ class DataProvider {
 
 private extension DataProvider {
 
-    func removeDifferences(imagesInfos: [ImageInfo]) {
+    func removeDifferences(imagesInfos: [ImageInfo], completion: @escaping ([ImageInfo]) -> Void) {
         let taskContext = container.newBackgroundContext()
-
-        let names = imagesInfos.map { $0.name }
+        var remaining = imagesInfos
 
         taskContext.performAndWait {
-            let differenceImagesRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CoreImage")
-            differenceImagesRequest.predicate = NSPredicate(format: "not (name in %@)", argumentArray: [names])
-
-            let batchDeleteRequest = NSBatchDeleteRequest(fetchRequest: differenceImagesRequest)
-            batchDeleteRequest.resultType = .resultTypeObjectIDs
+            let currentImagesRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "CoreImage")
 
             do {
-                let batchDeleteResult = try taskContext.execute(batchDeleteRequest) as? NSBatchDeleteResult
-
-                if let deletedObjectIDs = batchDeleteResult?.result as? [NSManagedObjectID] {
-                    NSManagedObjectContext.mergeChanges(
-                        fromRemoteContextSave: [NSDeletedObjectsKey: deletedObjectIDs],
-                        into: [self.container.viewContext])
+                guard let currentImages = try taskContext.fetch(currentImagesRequest) as? [CoreImage] else {
+                    return
                 }
+
+                var differences = [CoreImage]()
+
+                currentImages.forEach { coreImage in
+                    guard let imageInfo = imagesInfos.first(where: { $0.sha == coreImage.sha }) else {
+                        differences.append(coreImage)
+                        return
+                    }
+
+                    if imageInfo.name != coreImage.name {
+                        differences.append(coreImage)
+                        return
+                    }
+                    
+                    guard let index = remaining.firstIndex(where: { $0.sha == coreImage.sha }) else {
+                        return
+                    }
+                    
+                    remaining.remove(at: index)
+                }
+
+                differences.forEach { taskContext.delete($0) }
+                try? taskContext.save()
+                
+                completion(remaining)
             } catch {
                 print("Error: \(error)\nCould not batch delete existing records.")
             }

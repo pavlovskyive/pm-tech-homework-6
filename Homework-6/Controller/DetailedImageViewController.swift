@@ -19,17 +19,17 @@ class DetailedImageViewController: UIViewController {
         imageView.image = coreImage?.image
         title = coreImage?.name
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+
         let textAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
         navigationController?.navigationBar.largeTitleTextAttributes = textAttributes
     }
-    
+
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
+
         navigationController?.navigationBar.largeTitleTextAttributes = nil
     }
 }
