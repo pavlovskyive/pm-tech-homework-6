@@ -16,23 +16,64 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Luy-uo-F9U" userLabel="LogInButton">
-                                <rect key="frame" x="20.5" y="486" width="373" height="30"/>
-                                <state key="normal" title="Log in with GitHub"/>
-                                <connections>
-                                    <action selector="handleLogInButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Zqj-Dt-dLz"/>
-                                </connections>
-                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="GVq-46-x2J">
+                                <rect key="frame" x="97" y="451" width="220" height="100"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yxx-7L-hom">
+                                        <rect key="frame" x="0.0" y="0.0" width="220" height="45"/>
+                                        <color key="backgroundColor" systemColor="systemIndigoColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="220" id="WLD-lA-EuT"/>
+                                            <constraint firstAttribute="height" constant="45" id="wr4-ZM-mdV"/>
+                                        </constraints>
+                                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <inset key="titleEdgeInsets" minX="13" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <state key="normal" title="Log In with FaceID" image="faceid" catalog="system">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="8"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="handleBiometricsLogInButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="eHX-Vo-bsr"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fYT-PR-HaD">
+                                        <rect key="frame" x="0.0" y="55" width="220" height="45"/>
+                                        <color key="backgroundColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="220" id="iID-Lp-JfA"/>
+                                            <constraint firstAttribute="height" constant="45" id="q8e-tl-Tnb"/>
+                                        </constraints>
+                                        <inset key="titleEdgeInsets" minX="13" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                        <state key="normal" title="Log In with GitHub" image="github_icon">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="8"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="handleGitHubLogInButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="eZa-oN-RtX"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="Luy-uo-F9U" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="0Zp-Ny-tTn"/>
-                            <constraint firstItem="Luy-uo-F9U" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="Ajf-mc-rld"/>
-                            <constraint firstItem="Luy-uo-F9U" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" multiplier="0.9" id="qIS-Su-N0z"/>
+                            <constraint firstItem="GVq-46-x2J" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="BAs-uZ-zyX"/>
+                            <constraint firstItem="GVq-46-x2J" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="ntu-7u-Gtv"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Welcome" largeTitleDisplayMode="always" id="RVI-TY-VjF"/>
+                    <connections>
+                        <outlet property="biometricsLoginButton" destination="yxx-7L-hom" id="KQ8-zj-nfA"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
@@ -58,8 +99,13 @@
         </scene>
     </scenes>
     <resources>
+        <image name="faceid" catalog="system" width="128" height="115"/>
+        <image name="github_icon" width="25" height="25"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemIndigoColor">
+            <color red="0.34509803921568627" green="0.33725490196078434" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

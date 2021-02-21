@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		7913137C25DD483A00E3D60B /* ImageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7913137B25DD483A00E3D60B /* ImageData.swift */; };
+		7922067125E3004200945002 /* UICollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7922067025E3004200945002 /* UICollectionView.swift */; };
 		7948377125DE4FDA00F18909 /* ImageFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7948377025DE4FDA00F18909 /* ImageFactory.swift */; };
 		79507ECF25DD28A400A3BDD1 /* CoreImage+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79507ECD25DD28A400A3BDD1 /* CoreImage+CoreDataClass.swift */; };
 		79507ED025DD28A400A3BDD1 /* CoreImage+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79507ECE25DD28A400A3BDD1 /* CoreImage+CoreDataProperties.swift */; };
@@ -15,6 +16,7 @@
 		79654EB225DBB9280076E44E /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79654EB125DBB9280076E44E /* AuthService.swift */; };
 		79654EB825DBC3CC0076E44E /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79654EB725DBC3CC0076E44E /* AuthViewController.swift */; };
 		79654EC525DBCED40076E44E /* KeychainServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79654EC425DBCED40076E44E /* KeychainServices.swift */; };
+		796B005F25E2D5260092905E /* LAContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796B005E25E2D5260092905E /* LAContext.swift */; };
 		796FB00125DFCB0800056AE3 /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 797CBA2425DEC96A00CE3611 /* LocalAuthentication.framework */; };
 		797CBA2625DEC97F00CE3611 /* LocalAuthentication.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 797CBA2425DEC96A00CE3611 /* LocalAuthentication.framework */; };
 		797CBA2F25DF0DB800CE3611 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 797CBA2E25DF0DB800CE3611 /* NetworkService.swift */; };
@@ -46,6 +48,7 @@
 
 /* Begin PBXFileReference section */
 		7913137B25DD483A00E3D60B /* ImageData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageData.swift; sourceTree = "<group>"; };
+		7922067025E3004200945002 /* UICollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UICollectionView.swift; sourceTree = "<group>"; };
 		7948377025DE4FDA00F18909 /* ImageFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFactory.swift; sourceTree = "<group>"; };
 		79507ECD25DD28A400A3BDD1 /* CoreImage+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CoreImage+CoreDataClass.swift"; path = "Homework-6/CoreData/Entities/CoreImage+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
 		79507ECE25DD28A400A3BDD1 /* CoreImage+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CoreImage+CoreDataProperties.swift"; path = "Homework-6/CoreData/Entities/CoreImage+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
@@ -53,6 +56,7 @@
 		79654EB125DBB9280076E44E /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		79654EB725DBC3CC0076E44E /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		79654EC425DBCED40076E44E /* KeychainServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainServices.swift; sourceTree = "<group>"; };
+		796B005E25E2D5260092905E /* LAContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LAContext.swift; sourceTree = "<group>"; };
 		797CBA2425DEC96A00CE3611 /* LocalAuthentication.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LocalAuthentication.framework; path = System/Library/Frameworks/LocalAuthentication.framework; sourceTree = SDKROOT; };
 		797CBA2A25DEF79D00CE3611 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
 		797CBA2E25DF0DB800CE3611 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
@@ -203,6 +207,8 @@
 			children = (
 				79A4364825DDA074004C0547 /* UIResponder.swift */,
 				797CBA3125DF186F00CE3611 /* Data.swift */,
+				796B005E25E2D5260092905E /* LAContext.swift */,
+				7922067025E3004200945002 /* UICollectionView.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -370,11 +376,13 @@
 				79DDCFAE25E2ABAF0061484B /* ImagesCollectionViewDelegate.swift in Sources */,
 				79654EC525DBCED40076E44E /* KeychainServices.swift in Sources */,
 				797CBA3225DF186F00CE3611 /* Data.swift in Sources */,
+				796B005F25E2D5260092905E /* LAContext.swift in Sources */,
 				79A4363525DD9829004C0547 /* ImagesViewController.swift in Sources */,
 				79A4364025DD9B67004C0547 /* ImageCell.swift in Sources */,
 				7913137C25DD483A00E3D60B /* ImageData.swift in Sources */,
 				79F6F57625DC512E005EFDA3 /* RepositoryContent.swift in Sources */,
 				797CBA2F25DF0DB800CE3611 /* NetworkService.swift in Sources */,
+				7922067125E3004200945002 /* UICollectionView.swift in Sources */,
 				79507ED025DD28A400A3BDD1 /* CoreImage+CoreDataProperties.swift in Sources */,
 				79B199A125DBB2950064B2C8 /* Images.xcdatamodeld in Sources */,
 				79507ED425DD28C800A3BDD1 /* CoreDataStack.swift in Sources */,

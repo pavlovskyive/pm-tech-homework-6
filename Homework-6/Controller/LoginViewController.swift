@@ -11,14 +11,32 @@ import LocalAuthentication
 
 class LoginViewController: UIViewController {
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    @IBOutlet weak var biometricsLoginButton: UIButton?
+    private let context = LAContext()
 
-        logIn()
+    lazy private var authService: AuthService = {
+        let authService = AuthService()
+        authService.onLogout = { [weak self] in
+            self?.logout()
+        }
+
+        return authService
+    }()
+
+    override func viewWillAppear(_ animated: Bool) {
+        setupButton()
     }
 
-    @IBAction func handleLogInButton(_ sender: UIButton) {
-        authenticate()
+    @IBAction func handleBiometricsLogInButton(_ sender: UIButton) {
+        loginWithBiometrics()
+    }
+
+    @IBAction func handleGitHubLogInButton(_ sender: UIButton) {
+        loginWithGitHub()
+    }
+
+    public func logout() {
+        setupButton()
     }
 }
 
@@ -33,77 +51,67 @@ private extension LoginViewController {
         return ""
     }
 
-    func loginWithBiometrics() {
-        let context = LAContext()
+    func setupButton() {
         var error: NSError?
 
-        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
-            let reason = "Identify yourself"
-
-            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics,
-                                   localizedReason: reason) { [weak self] success, _ in
-                DispatchQueue.main.async {
-                    if success {
-                        self?.navigateToMain()
-                    } else {
-                        let alertController = UIAlertController(
-                            title: "Authentication failed",
-                            message: "You can try again or login with GitHub", preferredStyle: .alert)
-                        alertController.addAction(UIAlertAction(title: "OK", style: .default))
-                        self?.present(alertController, animated: true)
-                    }
-                }
-            }
-        } else {
-            let alertController = UIAlertController(
-                title: "Biometric identification is not available",
-                message: "Your device is not configured for Face ID or Touch ID.", preferredStyle: .actionSheet)
-            alertController.addAction(UIAlertAction(title: "OK", style: .default))
-            present(alertController, animated: true)
-        }
-    }
-
-    func logIn() {
-        guard !accessToken.isEmpty else {
-            authenticate()
+        guard !accessToken.isEmpty,
+              context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) else {
+            biometricsLoginButton?.removeFromSuperview()
             return
         }
 
-        loginWithBiometrics()
+        switch context.biometryType {
+        case .faceID:
+            biometricsLoginButton?.setTitle("Log In with FaceID", for: .normal)
+        case .touchID:
+            biometricsLoginButton?.setTitle("Log In with TouchID", for: .normal)
+            biometricsLoginButton?.setImage(UIImage(systemName: "touchid"), for: .normal)
+        default:
+            break
+        }
     }
 
-    func authenticate() {
+    func loginWithBiometrics() {
 
-        let authVC = AuthViewController()
-        authVC.delegate = self
+        authService.loginWithBiometrics { [weak self] error in
+            guard error != nil else {
+                self?.navigateToMain()
+                return
+            }
 
-        self.present(UINavigationController(rootViewController: authVC),
-                     animated: true,
-                     completion: nil)
+            let alertController: UIAlertController
+
+            switch error {
+            case .noBiometrics:
+                alertController = UIAlertController(
+                    title: "Biometric identification is not available",
+                    message: "Your device is not configured for Face ID or Touch ID.", preferredStyle: .actionSheet)
+            case .biometricsNotRecognized:
+                alertController = UIAlertController(
+                    title: "Authentication failed",
+                    message: "You can try again or login with GitHub", preferredStyle: .alert)
+            default:
+                return
+            }
+
+            alertController.addAction(UIAlertAction(title: "OK", style: .default))
+            self?.present(alertController, animated: true)
+        }
+    }
+
+    func loginWithGitHub() {
+        authService.loginWithGitHub(navigationController: navigationController) { [weak self] in
+            self?.loginWithBiometrics()
+        }
     }
 
     func navigateToMain() {
         let imagesVC = ImagesViewController(nibName: "ImagesViewController", bundle: nil)
+        imagesVC.authService = authService
         let imagesNavigationController = UINavigationController(rootViewController: imagesVC)
 
         imagesNavigationController.modalPresentationStyle = .overFullScreen
 
         present(imagesNavigationController, animated: true)
-    }
-}
-
-extension LoginViewController: AuthDelegate {
-
-    func handleAccessToken(accessToken: String) {
-
-        let kcw = KeychainWrapper()
-        do {
-            navigateToMain()
-            try kcw.set(accessToken, forKey: "accessToken")
-        } catch let error as KeychainWrapperError {
-            print("Exception setting password: \(error.message ?? "no message")")
-        } catch {
-            print("An error occurred setting the password.")
-        }
     }
 }

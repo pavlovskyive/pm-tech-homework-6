@@ -39,11 +39,21 @@ extension ImagesDataSource: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 
-        guard let sectionInfo = frc.sections?[section] else {
-            return 0
+        let numberOfItems: Int
+
+        if let sectionInfo = frc.sections?[section] {
+            numberOfItems = sectionInfo.numberOfObjects
+        } else {
+            numberOfItems = 0
         }
 
-        return sectionInfo.numberOfObjects
+        if numberOfItems == 0 {
+            collectionView.setEmptyMessage("Repo has no images\nor you don't have access to its contents")
+        } else {
+            collectionView.restore()
+        }
+
+        return numberOfItems
     }
 
     func collectionView(_ collectionView: UICollectionView,

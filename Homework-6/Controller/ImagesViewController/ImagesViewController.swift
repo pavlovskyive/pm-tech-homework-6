@@ -13,15 +13,19 @@ class ImagesViewController: UIViewController {
     @IBOutlet weak private var collectionView: UICollectionView!
     @IBOutlet weak var layout: UICollectionViewFlowLayout!
 
+    public var authService: AuthService?
+
     private let context: NSManagedObjectContext = CoreDataStack.shared.container.viewContext
     private var dataSource: ImagesDataSource?
     private var dataProvider: DataProvider?
 
     lazy private var refreshControl = UIRefreshControl()
 
+    // swiftlint:disable weak_delegate
     lazy private var collectionViewDelegate = ImagesCollectionViewDelegate { [weak self] in
         self?.imageSelected(at: $0)
     }
+    // swiftlint:enable weak_delegate
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,7 +47,7 @@ private extension ImagesViewController {
 
     func setupNavigationBar() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(
-            title: "Log Out", style: .plain, target: self, action: #selector(logOut))
+            title: "Log Out", style: .plain, target: self, action: #selector(logout))
     }
 
     func setupRefreshControl() {
@@ -52,9 +56,8 @@ private extension ImagesViewController {
         collectionView.addSubview(refreshControl)
     }
 
-    @objc func logOut() {
-        let kcw = KeychainWrapper()
-        try? kcw.delete(forKey: "accessToken")
+    @objc func logout() {
+        authService?.logout()
         dataProvider?.clearStorage()
 
         navigationController?.dismiss(animated: true)

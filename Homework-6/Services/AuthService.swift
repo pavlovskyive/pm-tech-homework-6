@@ -6,10 +6,69 @@
 //
 
 import UIKit
+import LocalAuthentication
 
 class AuthService {
 
-    public func requestAccessToken(authCode: String, completion: @escaping (Result<String, NetworkError>) -> Void) {
+    private let kcw = KeychainWrapper()
+
+    public var onLogout: (() -> Void)?
+
+    public var authentified: Bool {
+        guard let accessToken = try? kcw.get(forKey: "accessToken"),
+              !accessToken.isEmpty else {
+            return false
+        }
+
+        return true
+    }
+
+    public func loginWithBiometrics(completion: @escaping (AuthError?) -> Void) {
+
+        let context = LAContext()
+        var error: NSError?
+
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            let reason = "Identify yourself"
+            context.localizedFallbackTitle = ""
+
+            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics,
+                                   localizedReason: reason) { success, _ in
+                DispatchQueue.main.async {
+                    if success {
+                        completion(nil)
+                    } else {
+                        completion(.biometricsNotRecognized)
+                    }
+                }
+            }
+        } else {
+            completion(.noBiometrics)
+        }
+    }
+
+    public func loginWithGitHub(
+        navigationController: UINavigationController?,
+        completion: @escaping () -> Void) {
+
+        let authVC = AuthViewController()
+        authVC.completion = { authCode in
+            authVC.dismiss(animated: true)
+            self.requestAccessToken(authCode: authCode)
+            completion()
+        }
+
+        navigationController?.present(authVC, animated: true)
+    }
+
+    public func logout() {
+        try? kcw.delete(forKey: "accessToken")
+        onLogout?()
+    }
+}
+
+private extension AuthService {
+    func requestAccessToken(authCode: String) {
 
         guard let tokenURL = Bundle.main.infoDictionary?["TOKEN_URL"] as? String,
               let clientID = Bundle.main.infoDictionary?["CLIENT_ID"] as? String,
@@ -34,13 +93,27 @@ class AuthService {
             case .success(let data):
                 guard let jsonObject = data.jsonObject(),
                       let token = jsonObject["access_token"] as? String else {
-                    completion(.failure(.badData))
                     return
                 }
-                completion(.success(token))
-            case .failure(let error):
-                completion(.failure(error))
+                self.handleAccessToken(token)
+            case .failure:
+                return
             }
         }
     }
+
+    func handleAccessToken(_ token: String) {
+        do {
+            try kcw.set(token, forKey: "accessToken")
+        } catch let error as KeychainWrapperError {
+            print("Exception setting password: \(error.message ?? "no message")")
+        } catch {
+            print("An error occurred setting the password.")
+        }
+    }
+}
+
+enum AuthError: Error {
+    case noBiometrics
+    case biometricsNotRecognized
 }

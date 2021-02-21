@@ -8,13 +8,9 @@
 import UIKit
 import WebKit
 
-protocol AuthDelegate: AnyObject {
-    func handleAccessToken(accessToken: String)
-}
-
 class AuthViewController: UIViewController {
 
-    weak var delegate: AuthDelegate?
+    var completion: ((String) -> Void)?
 
     lazy private var uuid = UUID().uuidString
     lazy private var webView: WKWebView = {
@@ -112,17 +108,6 @@ extension AuthViewController: WKNavigationDelegate {
               let authCode = urlComponents.queryItems?.first(where: { $0.name == "code" })?.value
         else { return }
 
-        AuthService().requestAccessToken(authCode: authCode) { [weak self] result in
-            switch result {
-            case .success(let token):
-                DispatchQueue.main.async {
-                    self?.dismiss(animated: true) {
-                        self?.delegate?.handleAccessToken(accessToken: token)
-                    }
-                }
-            case .failure(let error):
-                print(error)
-            }
-        }
+        completion?(authCode)
     }
 }
