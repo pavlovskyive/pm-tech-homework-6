@@ -11,6 +11,8 @@ class DataProvider {
 
     private let container: NSPersistentContainer
     private let apiService: ApiService
+    
+    private var fetchingImages: Bool = false
 
     private var viewContext: NSManagedObjectContext {
         return container.viewContext
@@ -32,30 +34,57 @@ class DataProvider {
         }
     }
 
-    public func fetchImages() {
+    public func fetchImages(completion: (() -> Void)? = nil) {
+
+        guard !fetchingImages else {
+            completion?()
+            return
+        }
+
+        fetchingImages = true
 
         apiService.getImagesInfo { result in
             switch result {
             case .success(let imagesInfos):
                 self.removeDifferences(imagesInfos: imagesInfos) { remaining in
-                    self.fetchImagesFromApi(imagesInfos: remaining)
+                    if remaining.count == 0 {
+                        self.fetchingImages = false
+                        completion?()
+                        return
+                    }
+                    self.fetchImagesFromApi(imagesInfos: remaining) { [weak self] in
+                        self?.fetchingImages = false
+                        completion?()
+                    }
                 }
             case .failure(let error):
+                self.fetchingImages = false
+                completion?()
                 print(error)
             }
         }
     }
 
-    private func fetchImagesFromApi(imagesInfos: [ImageInfo]) {
+    private func fetchImagesFromApi(imagesInfos: [ImageInfo], completion: (() -> Void)? = nil) {
+
+        let group = DispatchGroup()
 
         for imageInfo in imagesInfos {
+            group.enter()
+
             apiService.fetchImage(with: imageInfo) { result in
                 switch result {
                 case .success(let imageData):
                     ImageFactory.makeImage(with: imageData)
+                    group.leave()
                 case .failure(let error):
                     print(error)
+                    group.leave()
                 }
+            }
+            
+            group.notify(queue: .main) {
+                completion?()
             }
         }
     }

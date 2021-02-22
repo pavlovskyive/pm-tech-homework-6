@@ -92,9 +92,13 @@ private extension ImagesViewController {
     }
 
     @objc func reloadData() {
+
         refreshControl.beginRefreshing()
-        dataProvider?.fetchImages()
-        refreshControl.endRefreshing()
+        self.dataProvider?.fetchImages { [weak self] in
+            DispatchQueue.main.async {
+                self?.refreshControl.endRefreshing()
+            }
+        }
     }
 
     func imageSelected(at indexPath: IndexPath) {

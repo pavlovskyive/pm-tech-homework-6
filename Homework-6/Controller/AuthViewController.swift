@@ -19,7 +19,7 @@ class AuthViewController: UIViewController {
         // First time user authenticated, he will login by biometrics.
         configuration.websiteDataStore = .nonPersistent()
 
-        let webView = WKWebView(frame: view.bounds, configuration: configuration)
+        let webView = WKWebView(frame: .zero, configuration: configuration)
 
         return webView
     }()
@@ -41,6 +41,15 @@ private extension AuthViewController {
     func setup() {
 
         view.addSubview(webView)
+
+        webView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            webView.topAnchor.constraint(equalTo: view.topAnchor),
+            webView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            webView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
 
         webView.navigationDelegate = self
 
@@ -64,30 +73,6 @@ private extension AuthViewController {
         let urlRequest = URLRequest(url: url)
 
         webView.load(urlRequest)
-
-        let cancelButton = UIBarButtonItem(
-            barButtonSystemItem: .cancel,
-            target: self,
-            action: #selector(self.cancelAction))
-
-        navigationItem.leftBarButtonItem = cancelButton
-
-        let refreshButton = UIBarButtonItem(
-            barButtonSystemItem: .refresh,
-            target: self,
-            action: #selector(self.refreshAction))
-
-        navigationItem.rightBarButtonItem = refreshButton
-
-        navigationItem.title = "github.com"
-    }
-
-    @objc func cancelAction() {
-        self.dismiss(animated: true, completion: nil)
-    }
-
-    @objc func refreshAction() {
-        self.webView.reload()
     }
 }
 
